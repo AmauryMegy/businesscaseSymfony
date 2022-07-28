@@ -1,0 +1,7 @@
+App\Entity\ShoppingCart:
+  shoppingCart{0..300}:
+    createdAt: '<dateTimeBetween("-1500 days", "now")>'
+    validatedAt: '70%? <dateTimeBetween("now", "+1500 days")>'
+    status: 'validated'
+    paymentMethod: '@paymentMethod*'
+    user: '@User*'

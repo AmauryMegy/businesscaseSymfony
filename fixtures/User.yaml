@@ -1,0 +1,20 @@
+parameters:
+  password: '$2y$13$vldgApLZb5YMp51QTlLTyOSQf.TTiDYfd55FuaF6ZV2TAAdgE3enG' # 1234
+
+App\Entity\User:
+  User (template):
+    email: '<email()>'
+    password: '<{password}>'
+    firstName: '<firstName()>'
+    lastName: '<lastName()>'
+    phoneNumber: '0123456789'
+    birthAt: '<dateTimeBetween("-29200 days", "-6570 days")>'
+    registerAt: '<dateTimeBetween("-1500 days", "now")>'
+    address: '@address*'
+
+  user_admin (extends User):
+    email: 'admin@test.com'
+    firstName: 'Admin'
+    roles: ['ROLE_ADMIN']
+
+  User{0..50} (extends User): ~

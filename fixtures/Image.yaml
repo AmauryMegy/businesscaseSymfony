@@ -1,0 +1,5 @@
+App\Entity\Image:
+  image{0..300}:
+    title: 'https://picsum.photos/200'
+    alternativeText: 'Texte alternatif'
+    product: '@Product*'

@@ -1,0 +1,4 @@
+App\Entity\Category:
+  category{0..15}:
+    label: '<word(1)>'
+    category: '80%? @category*'

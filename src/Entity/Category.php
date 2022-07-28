@@ -22,7 +22,7 @@ class Category
     private ?self $category = null;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: self::class)]
-    private Collection $categories;
+    private Collection $categories; // Les catégories filles
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]
     private Collection $products;

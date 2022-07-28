@@ -1,0 +1,8 @@
+App\Entity\Product:
+  Product{0..150}:
+    label: '<word(1)>'
+    price: '<randomNumber(1,1000)>'
+    description: '<sentence(20,50)>'
+    isActive: '<boolean(80)>'
+    brand: '@brand*'
+    category: '@category*'
