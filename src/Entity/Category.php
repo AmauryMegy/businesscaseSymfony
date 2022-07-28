@@ -19,10 +19,10 @@ class Category
     private ?string $label = null;
 
     #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'categories')]
-    private ?self $category = null;
+    private ?self $category = null; // Catégories parents
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: self::class)]
-    private Collection $categories; // Les catégories filles
+    private Collection $categories; // Catégories enfants
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]
     private Collection $products;
