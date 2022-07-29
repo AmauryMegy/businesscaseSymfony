@@ -10,7 +10,18 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    itemOperations: [
+        'get' => [
+            'access_control' => 'is_granted("ROLE_STATS") or is_granted("ROLE_ADMIN")',
+        ],
+    ],
+    collectionOperations: [
+        'get' => [
+            'access_control' => 'is_granted("ROLE_STATS") or is_granted("ROLE_ADMIN")',
+        ],
+    ],
+)]
 class Product
 {
     #[ORM\Id]

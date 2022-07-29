@@ -12,12 +12,12 @@ use Doctrine\ORM\Mapping as ORM;
 #[ApiResource(
     itemOperations: [
         'get' => [
-            'access_control' => 'is_granted("ROLE_STATS")',
+            'access_control' => 'is_granted("ROLE_STATS") or is_granted("ROLE_ADMIN")',
         ],
     ],
     collectionOperations: [
         'get' => [
-            'access_control' => 'is_granted("ROLE_STATS")',
+            'access_control' => 'is_granted("ROLE_STATS") or is_granted("ROLE_ADMIN")',
         ],
     ],
 )]

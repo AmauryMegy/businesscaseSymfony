@@ -12,7 +12,18 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[ApiResource()]
+#[ApiResource(
+    itemOperations: [
+        'get' => [
+            'access_control' => 'is_granted("ROLE_STATS") or is_granted("ROLE_ADMIN")',
+        ],
+    ],
+    collectionOperations: [
+        'get' => [
+            'access_control' => 'is_granted("ROLE_STATS") or is_granted("ROLE_ADMIN")',
+        ],
+    ],
+)]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -57,7 +68,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ShoppingCart::class)]
     private Collection $shoppingCarts;
 
-    #[ORM\Column(length: 255, nullable: true, unique: true)]
+    #[ORM\Column(length: 180, nullable: true, unique: true)]
     private ?string $username = null;
 
     public function __construct()

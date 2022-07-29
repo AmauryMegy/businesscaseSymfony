@@ -13,22 +13,31 @@ security:
     role_hierarchy:
         ROLE_USER: ROLE_USER
         ROLE_STATS: ROLE_USER
-        ROLE_ADMIN: ROLE_USER
+        ROLE_ADMIN: ROLE_STATS
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
+        api:
+            pattern: '^/api'
             stateless: true
             provider: app_user_provider
             json_login:
-                check_path: /authentication_token
+                check_path: /api/authentication_token
                 username_path: email
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
             jwt: ~
+        main:
+            provider: app_user_provider
+
+            custom_authenticator: App\Security\AppCustomAuthenticator
+            logout:
+                path: app_logout
+                # where to redirect after logout
+                # target: app_any_route
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
