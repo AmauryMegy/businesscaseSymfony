@@ -15,6 +15,7 @@ App\Entity\User:
   user_admin (extends User):
     email: 'admin@test.com'
     firstName: 'Admin'
+    username: 'LaFaceCachéeDeLaLune'
     roles: ['ROLE_ADMIN']
 
   User{0..50} (extends User): ~

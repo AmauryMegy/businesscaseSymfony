@@ -57,6 +57,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: ShoppingCart::class)]
     private Collection $shoppingCarts;
 
+    #[ORM\Column(length: 255, nullable: true, unique: true)]
+    private ?string $username = null;
+
     public function __construct()
     {
         $this->reviews = new ArrayCollection();
@@ -261,6 +264,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
                 $shoppingCart->setUser(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->username;
+    }
+
+    public function setUsername(?string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }
