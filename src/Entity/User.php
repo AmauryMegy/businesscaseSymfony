@@ -10,6 +10,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ApiResource(
@@ -32,6 +33,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[
+        Assert\NotBlank(
+            message: 'The email must be filled.',
+        ),
+        Assert\Email(
+            message: 'The email must be a valid email address.',
+        ),
+        Assert\Length(
+            max: 180,
+            maxMessage: 'The email must be at most {{ limit }} characters long.',
+        ),
+    ]
     private ?string $email = null;
 
     #[ORM\Column]
@@ -41,21 +54,89 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[
+        Assert\NotBlank(
+            message: 'The password must be filled.',
+        ),
+        Assert\Length(
+            min: 8,
+            minMessage: 'The password must be at least {{ limit }} characters long.',
+        ),
+        Assert\Regex(
+            pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/',
+            message: 'The password must contain at least one lowercase letter, one uppercase letter, one digit, and one special character.',
+        ),
+    ]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\NotBlank(
+            message: 'The first name must be filled.',
+        ),
+        Assert\Regex(
+            pattern: '/^[a-zA-Z]+$/',
+            message: 'The first name must be only alphabetic characters without special characters.',
+        ),
+        Assert\Length(
+            max: 255,
+            maxMessage: 'The first name must be at most {{ limit }} characters long.',
+        ),
+    ]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\NotBlank(
+            message: 'The last name must be filled.',
+        ),
+        Assert\Regex(
+            pattern: '/^[a-zA-Z]+$/',
+            message: 'The last name must be only alphabetic characters without special characters.',
+        ),
+        Assert\Length(
+            max: 255,
+            maxMessage: 'The last name must be at most {{ limit }} characters long.',
+        ),
+    ]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 10)]
+    #[
+        Assert\NotBlank(
+            message: 'The phone number must be filled.',
+        ),
+        Assert\Regex(
+            pattern: '/^\d{10}$/',
+            message: 'The phone number must be a ten number.',
+        ),
+    ]
     private ?string $phoneNumber = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[
+        Assert\NotBlank(
+            message: 'The birth date must be filled.',
+        ),
+        Assert\Date(
+            message: 'The birth date must be a valid date.',
+        ),
+        Assert\Expression(
+            'this.getBirthAt() < this.getRegisterAt()',
+            message: 'Birth date must be lesser than register at.',
+        )
+    ]
     private ?\DateTimeInterface $birthAt = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[
+        Assert\NotBlank(
+            message: 'The creation date must be filled.',
+        ),
+        Assert\Date(
+            message: 'The creation date must be a valid date.',
+        ),
+    ]
     private ?\DateTimeInterface $registerAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]

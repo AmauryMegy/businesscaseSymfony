@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ProductInShoppingCartRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductInShoppingCartRepository::class)]
 #[ApiResource(
@@ -28,9 +29,27 @@ class ProductInShoppingCart
     private ?int $id = null;
 
     #[ORM\Column]
+    #[
+        Assert\NotNull(
+            message: 'The product name must be filled.',
+        ),
+        Assert\GreaterThan(
+            value: 0,
+            message: 'The product quantity must be greater than 0.',
+        ),
+    ]
     private ?int $quantity = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 7, scale: 2)]
+    #[
+        Assert\NotNull(
+            message: 'The product price must be filled.',
+        ),
+        Assert\GreaterThan(
+            value: 0,
+            message: 'The product price must be greater than 0.',
+        ),
+    ]
     private ?string $price = null;
 
     #[ORM\ManyToOne(inversedBy: 'productInShoppingCarts')]

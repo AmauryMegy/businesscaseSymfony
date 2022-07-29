@@ -7,6 +7,7 @@ use App\Repository\AddressRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
 #[ApiResource(
@@ -38,9 +39,29 @@ class Address
     private ?string $line3 = null;
 
     #[ORM\Column(length: 5)]
+    #[
+        Assert\NotBlank,
+        Assert\Regex(
+            pattern: '/^\d{5}$/',
+            message: 'The postcode must be a five number.',
+        ),
+    ]
     private ?string $postcode = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\NotBlank(
+            message: 'The city name must be filled.',
+        ),
+        Assert\Regex(
+            pattern: '/^[a-zA-Z]+$/',
+            message: 'The city name must be only alphabetic characters without special characters.',
+        ),
+        Assert\Length(
+            max: 255,
+            maxMessage: 'The city name must be at most {{ limit }} characters long.',
+        ),
+    ]
     private ?string $city = null;
 
     #[ORM\OneToMany(mappedBy: 'address', targetEntity: User::class)]

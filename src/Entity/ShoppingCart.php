@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ShoppingCartRepository::class)]
 #[ApiResource(
@@ -30,12 +31,32 @@ class ShoppingCart
     private ?int $id = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[
+        Assert\NotNull(
+            message: 'The shopping cart created date must be filled.',
+        ),
+    ]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    #[
+        Assert\NotNull(
+            message: 'The shopping cart validated date must be filled.',
+        ),
+        Assert\Expression(
+            'this.getValidatedAt() >= this.getCreatedAt()',
+            message: 'Validated date must be greater or egal than created at.',
+        )
+    ]
     private ?\DateTimeInterface $validatedAt = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\Choice(
+            choices: ['pending', 'validated', 'canceled', 'in progress', 'sent', 'refunded' ],
+            message: 'The shopping cart status must be one of "pending", "validated", "canceled", "in progress", "sent", "refunded".',
+        ),
+    ]
     private ?string $status = null;
 
     #[ORM\OneToMany(mappedBy: 'shoppingCart', targetEntity: ProductInShoppingCart::class)]

@@ -7,6 +7,7 @@ use App\Repository\PaymentMethodRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PaymentMethodRepository::class)]
 #[ApiResource(
@@ -29,6 +30,15 @@ class PaymentMethod
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\NotBlank(
+            message: 'The payment method name must be filled.',
+        ),
+        Assert\Length(
+            max: 255,
+            maxMessage: 'The payment method name must be at most {{ limit }} characters long.',
+        ),
+    ]
     private ?string $label = null;
 
     #[ORM\OneToMany(mappedBy: 'paymentMethod', targetEntity: ShoppingCart::class)]

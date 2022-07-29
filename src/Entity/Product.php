@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 #[ApiResource(
@@ -30,15 +31,47 @@ class Product
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\NotBlank(
+            message: 'The product name must be filled.',
+        ),
+        Assert\Length(
+            max: 255,
+            maxMessage: 'The product name must be at most {{ limit }} characters long.',
+        ),
+    ]
     private ?string $label = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    #[
+        Assert\NotNull(
+            message: 'The product price must be filled.',
+        ),
+        Assert\GreaterThan(
+            value: 0,
+            message: 'The product price must be greater than 0.',
+        ),
+    ]
     private ?string $price = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[
+        Assert\NotBlank(
+            message: 'The product description must be filled.',
+        ),
+    ]
     private ?string $description = null;
 
     #[ORM\Column]
+    #[
+        Assert\Choice(
+            choices: [
+                'available',
+                'unavailable',
+            ],
+            message: 'The product status must be available or unavailable.',
+        ),
+    ]
     private ?bool $isActive = null;
 
     #[ORM\OneToMany(mappedBy: 'product', targetEntity: Review::class)]

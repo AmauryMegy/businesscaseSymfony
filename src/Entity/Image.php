@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ImageRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ImageRepository::class)]
 #[ApiResource(
@@ -28,9 +29,23 @@ class Image
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[
+        Assert\NotBlank(
+            message: 'The image name must be filled.',
+        ),
+        Assert\Length(
+            max: 255,
+            maxMessage: 'The image name must be at most {{ limit }} characters long.',
+        ),
+    ]
     private ?string $title = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[
+        Assert\NotBlank(
+            message: 'The image alternative text must be filled.',
+        ),
+    ]
     private ?string $alternativeText = null;
 
     #[ORM\ManyToOne(inversedBy: 'images')]

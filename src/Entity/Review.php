@@ -6,6 +6,7 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\ReviewRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReviewRepository::class)]
 #[ApiResource(
@@ -28,12 +29,35 @@ class Review
     private ?int $id = null;
 
     #[ORM\Column]
+    #[
+        Assert\NotNull(
+            message: 'The review notation must be filled.',
+        ),
+        Assert\Range(
+            min: 1,
+            max: 5,
+            message: 'The review notation must be between 1 and 5.',
+        ),
+    ]
     private ?int $notation = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[
+        Assert\Length(
+            min: 10,
+            max: 1000,
+            minMessage: 'The review content must be at least {{ limit }} characters long.',
+            maxMessage: 'The review content must be at most {{ limit }} characters long.',
+        ),
+    ]
     private ?string $comment = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[
+        Assert\NotNull(
+            message: 'The review date must be filled.',
+        ),
+    ]
     private ?\DateTimeInterface $createdAt = null;
 
     #[ORM\ManyToOne(inversedBy: 'reviews')]
